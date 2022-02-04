@@ -18,7 +18,7 @@
 - Backend, Dev : Firebase
 - ML, DL : Tensorflow, Python
 - DB
-- ![Group 110](https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png)
+![Group 110](https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png)
 ![Group 111](https://user-images.githubusercontent.com/77375383/152611877-1898efdf-0dea-491f-bb22-18ba75f98fff.png)
 
 ### ML, DL
