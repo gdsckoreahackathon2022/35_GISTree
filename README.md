@@ -4,6 +4,14 @@
 
 ### 쓰레기통 위치 및 쓰레기 이미지 분류
 
+쓰레기를 돈 내고 버려야 하는 요즘 시대! 
+올바른 재활용을 위해 지스트리가 나섰다!
+
+### Trash Flash
+
+1. 주변에 가까운 쓰레기통의 위치와 분류
+2. 쓰레기 이미지 분석을 통한 재활용 가능여부 판단 
+
 - Frontend : Flutter
 - Backend, Dev : Firebase
 - ML, DL : Tensorflow, Python
@@ -23,8 +31,9 @@
 2. Tflite
 
 ### Frontend Backend
+- 1. 
 
 ### Design
 
 - Figma link
-https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
+- https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
