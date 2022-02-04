@@ -627,6 +627,7 @@ class _CameraExampleState extends State<CameraExample> {
             markerId: MarkerId(normalcount.toString()),
             icon: normalicon,
             position: pos,
+            onTap: () {},
           ),
         );
       });
@@ -639,6 +640,7 @@ class _CameraExampleState extends State<CameraExample> {
             markerId: MarkerId(recyclecount.toString()),
             icon: recycleicon,
             position: pos,
+            onTap: () {},
           ),
         );
       });
@@ -651,6 +653,7 @@ class _CameraExampleState extends State<CameraExample> {
             markerId: MarkerId(foodcount.toString()),
             icon: foodicon,
             position: pos,
+            onTap: () {},
           ),
         );
       });
@@ -663,6 +666,7 @@ class _CameraExampleState extends State<CameraExample> {
             markerId: MarkerId(batterycount.toString()),
             icon: batteryicon,
             position: pos,
+            onTap: () {},
           ),
         );
       });
@@ -675,6 +679,7 @@ class _CameraExampleState extends State<CameraExample> {
             markerId: MarkerId(clothcount.toString()),
             icon: clothicon,
             position: pos,
+            onTap: () {},
           ),
         );
       });
