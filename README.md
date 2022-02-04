@@ -38,9 +38,6 @@
 - tensorflow model을 안드로이드에서 사용하기 위해 tflite model형식으로 변환
 - 약 5~10%의 정확도 손실이 있으나 model의 용량을 줄일 수 있다.
 
-### Frontend Backend
- - 1. 
-
 ### Design
 1. Figma link
  - https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
