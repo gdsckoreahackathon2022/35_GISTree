@@ -130,10 +130,8 @@ class _CameraExampleState extends State<CameraExample> {
   Widget showmap() {
     return 
       Container(
-        color: const Color(0xffd0cece),
-        
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
+        height:  MediaQuery.of(context).size.height-200,
         child: 
         GoogleMap(
                   mapType: MapType.hybrid,
@@ -142,52 +140,75 @@ class _CameraExampleState extends State<CameraExample> {
                   myLocationButtonEnabled: false,
                   onMapCreated: _onMapCreated,
                   onLongPress: _addMarker,
+                  markers: {
+                    if (_origin !=null) _origin,
+                    if (_destination != null) _destination
+                  },
           ));
   }
+
   Widget first_space() {
     return 
          Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  screenIndex == 0   
-                  ? 'deeplearning'
-                  : 'map',
-                  style: TextStyle(fontSize: 25, color: const Color(0xff1ea271)),
-                ),
+               
                 SizedBox(height: 25.0),
                 screenIndex == 0   
-                  ?  showImage()
+                  ? showImage()
                   : showmap(),
                
                 SizedBox(
                   height: 50.0,
                 ),
-                
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    // 카메라 촬영 버튼
-                    FloatingActionButton(
-                      child: Icon(Icons.add_a_photo),
-                      tooltip: 'pick Iamge',
-                      onPressed: () async {
-                        await getImage(ImageSource.camera);
-                        recycleDialog();
-                      },
-                    ),
+                if(screenIndex==0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: 
+                    <Widget>[
+                      // 카메라 촬영 버튼
+                      FloatingActionButton.extended(
+                            
+                            icon:  Icon(Icons.add_a_photo),
+                            label: Text('pick Iamge'),
+                            tooltip: 'pick Iamge',
+                            onPressed: () async {
+                          await getImage(ImageSource.camera);
+                          recycleDialog();
+                        },
+                        
+                      ),
 
-                    // 갤러리에서 이미지를 가져오는 버튼
-                    FloatingActionButton(
-                      child: Icon(Icons.wallpaper),
-                      tooltip: 'pick Iamge',
-                      onPressed: () async {
+                      // 갤러리에서 이미지를 가져오는 버튼
+                      FloatingActionButton.extended(
+                        icon:  Icon(Icons.add_photo_alternate_outlined),
+                        label: Text('pick Iamge'),
+                        tooltip: 'pick Iamge',
+                        onPressed: () async {
+                          await getImage(ImageSource.gallery);
+                          recycleDialog();
+                        },
+                      ),
+                    ],
+                  )
+                else 
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: 
+                    <Widget>[
+                      // 카메라 촬영 버튼
+                      FloatingActionButton(
+                            
+                        child: Icon(Icons.change_circle_rounded),
+                        onPressed: () async {
                         await getImage(ImageSource.gallery);
                         recycleDialog();
                       },
-                    ),
-                  ],
-                )
+                        
+                      )
+
+                    ],
+                  )
               ],
               
         );
@@ -279,9 +300,9 @@ class _CameraExampleState extends State<CameraExample> {
     bottomNavigationBar: BottomNavigationBar(
           currentIndex: screenIndex,
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: 'home'),
-            BottomNavigationBarItem(icon: Icon(Icons.restore_from_trash), label: 'chat'),
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'my')
+            BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: 'Trash'),
+            BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+            BottomNavigationBarItem(icon: Icon(Icons.restore_from_trash), label: 'Adding')
           ],
           onTap: (value) {
             setState(() { 
