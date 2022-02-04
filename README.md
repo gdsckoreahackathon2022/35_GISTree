@@ -22,15 +22,18 @@
 ### ML, DL
 
 1. tensorflow
-
-- xception pretrained model by imagenet + 50 dense layers
+- xception pretrained model by imagenet + 1 dense layers (adam by lr 0.001, categorical crossentropy, reducelronplateau mul 0.2, earlystopping)
 - 20k garbage image for kaggle data sets
   1. https://www.kaggle.com/asdasdasasdas/garbage-classification (License:OOA)
   2. https://www.kaggle.com/mostafaabla/garbage-classification (License:OD, OOA)
   3. https://www.kaggle.com/casually/garbage-classification (License: ?)
 - 9 classes(battery, biological, clothes, glass, metal, paper, plastic, trash, vinyl)
+- 15895 train set, 3971 validation set
+- 32 epoches, 82.1% validation accuracy
 
 2. Tflite
+- tensorflow model을 안드로이드에서 사용하기 위해 tflite model형식으로 변환
+- 약 5~10%의 정확도 손실이 있으나 model의 용량을 줄일 수 있다.
 
 ### Frontend Backend
  - 1. 
