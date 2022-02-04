@@ -167,31 +167,54 @@ class _CameraExampleState extends State<CameraExample> {
                 SizedBox(
                   height: 50.0,
                 ),
-                
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    // 카메라 촬영 버튼
-                    FloatingActionButton(
-                      child: Icon(Icons.add_a_photo),
-                      tooltip: 'pick Iamge',
-                      onPressed: () async {
-                        await getImage(ImageSource.camera);
-                        recycleDialog();
-                      },
-                    ),
+                if(screenIndex==0)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: 
+                    <Widget>[
+                      // 카메라 촬영 버튼
+                      FloatingActionButton.extended(
+                            
+                            icon:  Icon(Icons.add_a_photo),
+                            label: Text('pick Iamge'),
+                            tooltip: 'pick Iamge',
+                            onPressed: () async {
+                          await getImage(ImageSource.camera);
+                          recycleDialog();
+                        },
+                        
+                      ),
 
-                    // 갤러리에서 이미지를 가져오는 버튼
-                    FloatingActionButton(
-                      child: Icon(Icons.wallpaper),
-                      tooltip: 'pick Iamge',
-                      onPressed: () async {
+                      // 갤러리에서 이미지를 가져오는 버튼
+                      FloatingActionButton.extended(
+                        icon:  Icon(Icons.add_photo_alternate_outlined),
+                        label: Text('pick Iamge'),
+                        tooltip: 'pick Iamge',
+                        onPressed: () async {
+                          await getImage(ImageSource.gallery);
+                          recycleDialog();
+                        },
+                      ),
+                    ],
+                  )
+                else 
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: 
+                    <Widget>[
+                      // 카메라 촬영 버튼
+                      FloatingActionButton(
+                            
+                        child: Icon(Icons.change_circle_rounded),
+                        onPressed: () async {
                         await getImage(ImageSource.gallery);
                         recycleDialog();
                       },
-                    ),
-                  ],
-                )
+                        
+                      )
+
+                    ],
+                  )
               ],
               
         );
