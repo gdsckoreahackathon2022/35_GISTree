@@ -142,6 +142,10 @@ class _CameraExampleState extends State<CameraExample> {
                   myLocationButtonEnabled: false,
                   onMapCreated: _onMapCreated,
                   onLongPress: _addMarker,
+                  markers: {
+                    if (_origin !=null) _origin,
+                    if (_destination != null) _destination
+                  },
           ));
   }
   Widget first_space() {
