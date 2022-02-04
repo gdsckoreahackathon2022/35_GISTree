@@ -1,18 +1,19 @@
 // @dart=2.9
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
+// import 'dart:typed_data';
+// import 'dart:ui';
 import 'dart:async';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_application_1/location.dart';
+import 'package:flutter_application_1/trashcan_location.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image/image.dart' as img;
+// import 'package:image/image.dart' as img;
 
 void main() {
   runApp(MyApp());
@@ -62,20 +63,20 @@ class _CameraExampleState extends State<CameraExample> {
   Location location = Location();
   UserLocation mylocation = UserLocation();
 
-  // Completer<GoogleMapController> _controller = Completer();
-
   GoogleMapController _controller;
 
   void _onMapCreated(GoogleMapController ctrl) async {
     setState(() {
       _controller = ctrl;
     });
+
+    trashcanMarkerUpdate();
     // 실시간 위치 추적 및 위치 정보 업데이트
     location.onLocationChanged.listen((userlocation) {
       mylocation.currentlocation = userlocation;
       mylocation.latitude = userlocation.latitude;
       mylocation.longitude = userlocation.longitude;
-      // currentMarkerUpdate();
+      currentMarkerUpdate();
     });
   }
 
@@ -120,6 +121,35 @@ class _CameraExampleState extends State<CameraExample> {
     );
   }
 
+  // 마커 관련!!!!
+
+  Set<Marker> marker = {};
+
+  // 현재 위치 마커
+  void currentMarkerUpdate() {
+    setState(() {
+      marker.remove(Marker(markerId: MarkerId("current")));
+      marker.add(
+        Marker(
+          markerId: const MarkerId("current"),
+          draggable: false,
+          onTap: () {},
+          position: LatLng(mylocation.currentlocation.latitude,
+              mylocation.currentlocation.longitude),
+          icon: BitmapDescriptor.defaultMarkerWithHue(180),
+        ),
+      );
+    });
+  }
+
+  void trashcanMarkerUpdate() {
+    setState(() {
+      marker.addAll(trashcanInfo);
+    });
+  }
+
+  // 쓰레기 분류 관련!!!!!!!!!!
+
   loadModel() async {
     await Tflite.loadModel(
       model: "assets/garbage_classification.tflite",
@@ -131,31 +161,20 @@ class _CameraExampleState extends State<CameraExample> {
     });
   }
 
-  Future getImage(ImageSource imageSource) async {
+  Future<bool> getImage(ImageSource imageSource) async {
     final image = await picker.pickImage(source: imageSource);
-
-    setState(() {
-      _image = File(image.path);
-    });
-    await classifyImage(File(image.path));
-  }
-
-/*  Uint8List imageToByteListFloat32(
-    img.Image image, int inputSize, double mean, double std) {
-  var convertedBytes = Float32List(1 * inputSize * inputSize * 3);
-  var buffer = Float32List.view(convertedBytes.buffer);
-  int pixelIndex = 0;
-  for (var i = 0; i < inputSize; i++) {
-    for (var j = 0; j < inputSize; j++) {
-      var pixel = image.getPixel(j, i);
-      buffer[pixelIndex++] = (img.getRed(pixel) - mean) / std;
-      buffer[pixelIndex++] = (img.getGreen(pixel) - mean) / std;
-      buffer[pixelIndex++] = (img.getBlue(pixel) - mean) / std;
+    if (image != null) {
+      setState(() {
+        _image = File(image.path);
+      });
+    } else {
+      return false;
     }
+
+    await classifyImage(File(image.path));
+    return true;
   }
-  return convertedBytes.buffer.asUint8List();
-}
-*/
+
   Future classifyImage(File image) async {
     var output = await Tflite.runModelOnImage(
       path: image.path,
@@ -184,7 +203,7 @@ class _CameraExampleState extends State<CameraExample> {
   Widget showmap() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height - 80,
         child: Stack(
           children: [
             GoogleMap(
@@ -194,10 +213,7 @@ class _CameraExampleState extends State<CameraExample> {
               myLocationButtonEnabled: false,
               onMapCreated: _onMapCreated,
               onLongPress: _addMarker,
-              markers: {
-                if (_origin != null) _origin,
-                if (_destination != null) _destination
-              },
+              markers: marker,
             ),
             Positioned(
               right: 20,
@@ -222,7 +238,7 @@ class _CameraExampleState extends State<CameraExample> {
                 ),
                 onTap: () {
                   getCurrentLocation();
-                  // currentMarkerUpdate();
+                  currentMarkerUpdate();
                   moveCameraPosition();
                 },
               ),
@@ -248,8 +264,10 @@ class _CameraExampleState extends State<CameraExample> {
                 label: Text('pick Iamge'),
                 tooltip: 'pick Iamge',
                 onPressed: () async {
-                  await getImage(ImageSource.camera);
-                  recycleDialog();
+                  bool checkCamera = await getImage(ImageSource.camera);
+                  if (checkCamera) {
+                    recycleDialog();
+                  }
                 },
               ),
 
@@ -259,8 +277,10 @@ class _CameraExampleState extends State<CameraExample> {
                 label: Text('pick Iamge'),
                 tooltip: 'pick Iamge',
                 onPressed: () async {
-                  await getImage(ImageSource.gallery);
-                  recycleDialog();
+                  bool checkGallery = await getImage(ImageSource.gallery);
+                  if (checkGallery) {
+                    recycleDialog();
+                  }
                 },
               ),
             ],
