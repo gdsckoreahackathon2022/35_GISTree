@@ -10,7 +10,9 @@
   - 일반, 재활용, 음식물, 베터리, 의류 쓰레기통을 각가 분류하여 자신에게 필요한 쓰레기통 위치를 쉽게 찾을수 있다.
   
 2. 쓰레기 이미지 분석을 통한 재활용 가능여부 판단 
+  - tensorflow를 활용한 
   
+ 
 - Frontend : Flutter
 - Backend, Dev : Firebase
 - ML, DL : Tensorflow, Python
