@@ -215,24 +215,172 @@ class _CameraExampleState extends State<CameraExample> {
               onLongPress: _addMarker,
               markers: marker,
             ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox.fromSize(
+                          size: Size(2, 15)
+                        ),
+                SizedBox.fromSize(
+                          size: Size(MediaQuery.of(context).size.width-30, 50),
+                          child: ClipRRect(
+                            
+                            borderRadius: BorderRadius.circular(25.0),
+                            child: Material(
+                              color: Colors.white,
+                              child: InkWell(
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.shopping_cart,size: 14,color:Colors.white), // <-- Icon
+                                    Text(" Trash Fresh 이용 방법 및 주의사항",style:TextStyle(fontSize:14,color:Colors.black)), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    SizedBox.fromSize(
+                          size: Size(10, 5)
+                        ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        SizedBox.fromSize(
+                          size: Size(10, 10)
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(55, 30),
+                          child: ClipRRect(
+                            
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Material(
+                              color: Colors.yellow[700],
+                              child: InkWell(
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.miscellaneous_services,size: 13,color:Colors.white), // <-- Icon
+                                    Text("일반",style:TextStyle(fontSize:13,color:Colors.white)), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(65, 30),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Material(
+                               color: Colors.green[400],
+                              child: InkWell(
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.eco_outlined,size: 13,color:Colors.white), // <-- Icon
+                                    Text("재활용",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(65, 30),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Material( 
+                              color: Colors.blue [600],
+                              child: InkWell(
+                                splashColor: Colors.green, 
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.invert_colors,size: 13,color:Colors.white), // <-- Icon
+                                    Text("음식물",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(65, 30),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Material(
+                               color: Colors.red[500],
+                              child: InkWell(
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.battery_std_sharp,size: 13,color:Colors.white), // <-- Icon
+                                    Text("건전지",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(55, 30),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15.0),
+                            child: Material(
+                               color: Colors.green[700],
+                              child: InkWell(
+                                
+                                onTap: () {}, 
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.local_mall_sharp,size: 13,color:Colors.white), // <-- Icon
+                                    Text("의류",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox.fromSize(
+                          size: Size(MediaQuery.of(context).size.width-330, 1)
+                        ),
+                      ],
+                    )
+                ],
+              ),
             Positioned(
               right: 20,
               bottom: 20,
               child: InkWell(
                 child: Container(
-                  height: 60,
-                  width: 60,
+                  height: 55,
+                  width: 55,
                   decoration: BoxDecoration(
-                    color: Color(0xff4B9B77),
+                    color: Color(0xffff0f0f0),
                     borderRadius: BorderRadius.all(
                       Radius.circular(180.0),
                     ),
+                    boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          spreadRadius: 3,
+                          blurRadius: 3,
+                          offset: Offset(0, 2), // changes position of shadow
+                        ),
+                      ],
                   ),
                   child: Center(
                     child: Image.asset(
                       "assets/location_icon.png",
-                      width: 45,
-                      height: 45,
+                      height: 35,
+                      width: 35,
                     ),
                   ),
                 ),
@@ -365,14 +513,22 @@ class _CameraExampleState extends State<CameraExample> {
 
     return SafeArea(
       child: Scaffold(
+          
           backgroundColor: const Color(0xfff4f3f9),
           body: first_space(),
           //바텀 네비게이션바
           bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Color(0xff4B9B77),
             currentIndex: screenIndex,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white.withOpacity(.70),
+            selectedFontSize: 14,
+            unselectedFontSize: 14,
+             
             items: [
               BottomNavigationBarItem(
-                  icon: Icon(Icons.camera_alt), label: 'Trash'),
+                  icon: Icon(Icons.camera_alt), 
+                  label: 'Trash'),
               BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
               BottomNavigationBarItem(
                   icon: Icon(Icons.restore_from_trash), label: 'Adding')
