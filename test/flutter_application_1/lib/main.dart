@@ -1,7 +1,10 @@
-
+// @dart=2.9
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,15 +28,27 @@ class MyApp extends StatelessWidget {
 }
 
 class CameraExample extends StatefulWidget {
-  const CameraExample({ Key? key }) : super(key: key);
+  const CameraExample({ Key key }) : super(key: key);
   @override
   _CameraExampleState createState() => _CameraExampleState();
 }
-
+  
 class _CameraExampleState extends State<CameraExample> {
-  File? _image;
+
+  static final CameraPosition _initialCarm = CameraPosition(
+    target: LatLng(37.39348036043087, 127.11455031065394),
+    zoom: 14,
+  );
+  File _image;
   final picker = ImagePicker();
-  List? _outputs;
+  List _outputs;
+//바텀 네비게이션바 이름
+  int screenIndex = 0;
+  List<Widget> screenList = [Text('홈스크린'), Text('채팅 스크린'), Text('마이 스크린')];
+
+  Marker _origin;
+  Marker _destination;
+  
 
   @override
   void initState() {
@@ -41,6 +56,12 @@ class _CameraExampleState extends State<CameraExample> {
     loadModel().then((value) {
       setState(() {});
     });
+  } 
+  
+  
+   void _onMapCreated(GoogleMapController controller) async {
+    GoogleMapController _googleMapController;
+    _googleMapController=controller;
   }
 
   loadModel() async {
@@ -58,9 +79,9 @@ class _CameraExampleState extends State<CameraExample> {
     final image = await picker.pickImage(source: imageSource);
 
     setState(() {
-      _image = File(image!.path);
+      _image = File(image.path);
     });
-    await classifyImage(File(image!.path));
+    await classifyImage(File(image.path));
   }
 
 /*  Uint8List imageToByteListFloat32(
@@ -93,7 +114,10 @@ class _CameraExampleState extends State<CameraExample> {
   }
 
   Widget showImage() {
-    return Container(
+    return 
+     
+
+      Container(
         color: const Color(0xffd0cece),
         margin: EdgeInsets.only(left: 95, right: 95),
         width: MediaQuery.of(context).size.width,
@@ -101,7 +125,73 @@ class _CameraExampleState extends State<CameraExample> {
         child: Center(
             child: _image == null
                 ? Text('No image selected.')
-                : Image.file(File(_image!.path))));
+                : Image.file(File(_image.path))));
+  }
+  Widget showmap() {
+    return 
+      Container(
+        color: const Color(0xffd0cece),
+        
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width,
+        child: 
+        GoogleMap(
+                  mapType: MapType.hybrid,
+                  initialCameraPosition: _initialCarm,
+                  zoomControlsEnabled: false,
+                  myLocationButtonEnabled: false,
+                  onMapCreated: _onMapCreated,
+                  onLongPress: _addMarker,
+          ));
+  }
+  Widget first_space() {
+    return 
+         Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  screenIndex == 0   
+                  ? 'deeplearning'
+                  : 'map',
+                  style: TextStyle(fontSize: 25, color: const Color(0xff1ea271)),
+                ),
+                SizedBox(height: 25.0),
+                screenIndex == 0   
+                  ?  showImage()
+                  : showmap(),
+               
+                SizedBox(
+                  height: 50.0,
+                ),
+                
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    // 카메라 촬영 버튼
+                    FloatingActionButton(
+                      child: Icon(Icons.add_a_photo),
+                      tooltip: 'pick Iamge',
+                      onPressed: () async {
+                        await getImage(ImageSource.camera);
+                        recycleDialog();
+                      },
+                    ),
+
+                    // 갤러리에서 이미지를 가져오는 버튼
+                    FloatingActionButton(
+                      child: Icon(Icons.wallpaper),
+                      tooltip: 'pick Iamge',
+                      onPressed: () async {
+                        await getImage(ImageSource.gallery);
+                        recycleDialog();
+                      },
+                    ),
+                  ],
+                )
+              ],
+              
+        );
+    
   }
 
   recycleDialog() {
@@ -120,7 +210,7 @@ class _CameraExampleState extends State<CameraExample> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      _outputs![0]['label'].toString().toUpperCase(),
+                      _outputs[0]['label'].toString().toUpperCase(),
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 15.0,
@@ -172,59 +262,69 @@ class _CameraExampleState extends State<CameraExample> {
               );
             });
   }
+  
 
   @override
   Widget build(BuildContext context) {
-
+   
       SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
+   
     return Scaffold(
         backgroundColor: const Color(0xfff4f3f9),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Classify',
-              style: TextStyle(fontSize: 25, color: const Color(0xff1ea271)),
-            ),
-            SizedBox(height: 25.0),
-            showImage(),
-            SizedBox(
-              height: 50.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                // 카메라 촬영 버튼
-                FloatingActionButton(
-                  child: Icon(Icons.add_a_photo),
-                  tooltip: 'pick Iamge',
-                  onPressed: () async {
-                    await getImage(ImageSource.camera);
-                    recycleDialog();
-                  },
-                ),
-
-                // 갤러리에서 이미지를 가져오는 버튼
-                FloatingActionButton(
-                  child: Icon(Icons.wallpaper),
-                  tooltip: 'pick Iamge',
-                  onPressed: () async {
-                    await getImage(ImageSource.gallery);
-                    recycleDialog();
-                  },
-                ),
-              ],
-            )
+       
+        body: 
+        first_space(),
+    //바텀 네비게이션바
+    bottomNavigationBar: BottomNavigationBar(
+          currentIndex: screenIndex,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: 'home'),
+            BottomNavigationBarItem(icon: Icon(Icons.restore_from_trash), label: 'chat'),
+            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'my')
           ],
-    ));
+          onTap: (value) {
+            setState(() { 
+              screenIndex = value;
+            }
+            
+            );
+          },
+        )
+    );
+    
+    
   }
+  
   
   @override
   void dispose() {
     Tflite.close();
     super.dispose();
   }
+   void _addMarker(LatLng pos) async{
+    if (_origin == null || (_origin != null&& _destination != null)){
+      setState((){
+        _origin = Marker(
+        markerId: const MarkerId('origin'),
+        infoWindow : const InfoWindow(title:'Origin'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+        position: pos,
+        );
+        _destination = null;
+
+      });
+    } else{
+      setState((){
+        _destination = Marker(
+        markerId: const MarkerId('destination'),
+        infoWindow : const InfoWindow(title:'Destination'),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        position: pos,
+        );
+      });
+
+  }
 }
 
+}
