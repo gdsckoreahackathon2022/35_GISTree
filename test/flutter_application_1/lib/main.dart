@@ -44,7 +44,7 @@ class _CameraExampleState extends State<CameraExample> {
   final picker = ImagePicker();
   List _outputs;
 //바텀 네비게이션바 이름
-  int screenIndex = 0;
+  int screenIndex = 1;
   List<Widget> screenList = [Text('홈스크린'), Text('채팅 스크린'), Text('마이 스크린')];
 
   Marker _origin;
@@ -70,7 +70,9 @@ class _CameraExampleState extends State<CameraExample> {
       _controller = ctrl;
     });
 
-    trashcanMarkerUpdate();
+    // 처음 실행할 때는 일반쓰레기통 보여줌
+    trashcanMarkerUpdate(normaltrashcanInfo);
+
     // 실시간 위치 추적 및 위치 정보 업데이트
     location.onLocationChanged.listen((userlocation) {
       mylocation.currentlocation = userlocation;
@@ -124,28 +126,41 @@ class _CameraExampleState extends State<CameraExample> {
   // 마커 관련!!!!
 
   Set<Marker> marker = {};
+  Marker mymarker = Marker(markerId: MarkerId("current"));
+  List<Marker> trashmarker = [];
+
+  // 사용자가 마커 추가할 때 사용
+  String currentTrashType = "";
 
   // 현재 위치 마커
   void currentMarkerUpdate() {
     setState(() {
-      marker.remove(Marker(markerId: MarkerId("current")));
-      marker.add(
-        Marker(
-          markerId: const MarkerId("current"),
-          draggable: false,
-          onTap: () {},
-          position: LatLng(mylocation.currentlocation.latitude,
-              mylocation.currentlocation.longitude),
-          icon: BitmapDescriptor.defaultMarkerWithHue(180),
-        ),
+      mymarker = Marker(
+        markerId: const MarkerId("current"),
+        draggable: false,
+        onTap: () {},
+        position: LatLng(mylocation.currentlocation.latitude,
+            mylocation.currentlocation.longitude),
+        icon: BitmapDescriptor.defaultMarkerWithHue(180),
       );
+    });
+    sumMarker();
+  }
+
+  void sumMarker() {
+    setState(() {
+      marker = {};
+      marker.add(mymarker);
+      marker.addAll(trashmarker);
     });
   }
 
-  void trashcanMarkerUpdate() {
+  void trashcanMarkerUpdate(List<Marker> trashcan) {
     setState(() {
-      marker.addAll(trashcanInfo);
+      trashmarker = [];
+      trashmarker = trashcan;
     });
+    sumMarker();
   }
 
   // 쓰레기 분류 관련!!!!!!!!!!
@@ -203,7 +218,7 @@ class _CameraExampleState extends State<CameraExample> {
   Widget showmap() {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height - 80,
+        height: MediaQuery.of(context).size.height - 94,
         child: Stack(
           children: [
             GoogleMap(
@@ -212,151 +227,182 @@ class _CameraExampleState extends State<CameraExample> {
               zoomControlsEnabled: false,
               myLocationButtonEnabled: false,
               onMapCreated: _onMapCreated,
-              onLongPress: _addMarker,
+              onLongPress: checkAddMarker,
               markers: marker,
             ),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox.fromSize(size: Size(2, 15)),
                 SizedBox.fromSize(
-                          size: Size(2, 15)
+                  size: Size(MediaQuery.of(context).size.width - 30, 50),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(25.0),
+                    child: Material(
+                      color: Colors.white,
+                      child: InkWell(
+                        onTap: () {},
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(" Trash Fresh 이용 방법 및 주의사항",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black)), // <-- Text
+                          ],
                         ),
-                SizedBox.fromSize(
-                          size: Size(MediaQuery.of(context).size.width-30, 50),
-                          child: ClipRRect(
-                            
-                            borderRadius: BorderRadius.circular(25.0),
-                            child: Material(
-                              color: Colors.white,
-                              child: InkWell(
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.shopping_cart,size: 14,color:Colors.white), // <-- Icon
-                                    Text(" Trash Fresh 이용 방법 및 주의사항",style:TextStyle(fontSize:14,color:Colors.black)), // <-- Text
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox.fromSize(size: Size(10, 5)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBox.fromSize(size: Size(10, 10)),
                     SizedBox.fromSize(
-                          size: Size(10, 5)
-                        ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        SizedBox.fromSize(
-                          size: Size(10, 10)
-                        ),
-                        SizedBox.fromSize(
-                          size: Size(55, 30),
-                          child: ClipRRect(
-                            
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Material(
-                              color: Colors.yellow[700],
-                              child: InkWell(
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.miscellaneous_services,size: 13,color:Colors.white), // <-- Icon
-                                    Text("일반",style:TextStyle(fontSize:13,color:Colors.white)), // <-- Text
-                                  ],
-                                ),
-                              ),
+                      size: Size(55, 30),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Material(
+                          color: Colors.yellow[700],
+                          child: InkWell(
+                            onTap: () {
+                              trashcanMarkerUpdate(normaltrashcanInfo);
+                              currentTrashType = "normal";
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.miscellaneous_services,
+                                    size: 13, color: Colors.white), // <-- Icon
+                                Text("일반",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white)), // <-- Text
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox.fromSize(
-                          size: Size(65, 30),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Material(
-                               color: Colors.green[400],
-                              child: InkWell(
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.eco_outlined,size: 13,color:Colors.white), // <-- Icon
-                                    Text("재활용",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
-                                  ],
-                                ),
-                              ),
+                      ),
+                    ),
+                    SizedBox.fromSize(
+                      size: Size(65, 30),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Material(
+                          color: Colors.green[400],
+                          child: InkWell(
+                            onTap: () {
+                              trashcanMarkerUpdate(recycletrashcanInfo);
+                              currentTrashType = "recycle";
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.eco_outlined,
+                                    size: 13, color: Colors.white), // <-- Icon
+                                Text(
+                                  "재활용",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ), // <-- Text
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox.fromSize(
-                          size: Size(65, 30),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Material( 
-                              color: Colors.blue [600],
-                              child: InkWell(
-                                splashColor: Colors.green, 
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.invert_colors,size: 13,color:Colors.white), // <-- Icon
-                                    Text("음식물",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
-                                  ],
-                                ),
-                              ),
+                      ),
+                    ),
+                    SizedBox.fromSize(
+                      size: Size(65, 30),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Material(
+                          color: Colors.blue[600],
+                          child: InkWell(
+                            splashColor: Colors.green,
+                            onTap: () {
+                              trashcanMarkerUpdate(foodtrashcanInfo);
+                              currentTrashType = "food";
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.invert_colors,
+                                    size: 13, color: Colors.white), // <-- Icon
+                                Text(
+                                  "음식물",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ), // <-- Text
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox.fromSize(
-                          size: Size(65, 30),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Material(
-                               color: Colors.red[500],
-                              child: InkWell(
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.battery_std_sharp,size: 13,color:Colors.white), // <-- Icon
-                                    Text("건전지",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
-                                  ],
-                                ),
-                              ),
+                      ),
+                    ),
+                    SizedBox.fromSize(
+                      size: Size(65, 30),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Material(
+                          color: Colors.red[500],
+                          child: InkWell(
+                            onTap: () {
+                              trashcanMarkerUpdate(batterytrashcanInfo);
+                              currentTrashType = "battery";
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.battery_std_sharp,
+                                    size: 13, color: Colors.white), // <-- Icon
+                                Text(
+                                  "건전지",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ), // <-- Text
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox.fromSize(
-                          size: Size(55, 30),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15.0),
-                            child: Material(
-                               color: Colors.green[700],
-                              child: InkWell(
-                                
-                                onTap: () {}, 
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.local_mall_sharp,size: 13,color:Colors.white), // <-- Icon
-                                    Text("의류",style:TextStyle(fontSize:13,color:Colors.white),), // <-- Text
-                                  ],
-                                ),
-                              ),
+                      ),
+                    ),
+                    SizedBox.fromSize(
+                      size: Size(55, 30),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15.0),
+                        child: Material(
+                          color: Colors.green[700],
+                          child: InkWell(
+                            onTap: () {
+                              trashcanMarkerUpdate(clothtrashcanInfo);
+                              currentTrashType = "cloth";
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Icon(Icons.local_mall_sharp,
+                                    size: 13, color: Colors.white), // <-- Icon
+                                Text(
+                                  "의류",
+                                  style: TextStyle(
+                                      fontSize: 13, color: Colors.white),
+                                ), // <-- Text
+                              ],
                             ),
                           ),
                         ),
-                        SizedBox.fromSize(
-                          size: Size(MediaQuery.of(context).size.width-330, 1)
-                        ),
-                      ],
-                    )
-                ],
-              ),
+                      ),
+                    ),
+                    SizedBox.fromSize(
+                        size: Size(MediaQuery.of(context).size.width - 330, 1)),
+                  ],
+                )
+              ],
+            ),
             Positioned(
-              right: 20,
+              left: 20,
               bottom: 20,
               child: InkWell(
                 child: Container(
@@ -368,13 +414,13 @@ class _CameraExampleState extends State<CameraExample> {
                       Radius.circular(180.0),
                     ),
                     boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 3,
-                          blurRadius: 3,
-                          offset: Offset(0, 2), // changes position of shadow
-                        ),
-                      ],
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 3,
+                        offset: Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
                   ),
                   child: Center(
                     child: Image.asset(
@@ -513,31 +559,31 @@ class _CameraExampleState extends State<CameraExample> {
 
     return SafeArea(
       child: Scaffold(
-          
           backgroundColor: const Color(0xfff4f3f9),
           body: first_space(),
           //바텀 네비게이션바
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Color(0xff4B9B77),
-            currentIndex: screenIndex,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white.withOpacity(.70),
-            selectedFontSize: 14,
-            unselectedFontSize: 14,
-             
-            items: [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.camera_alt), 
-                  label: 'Trash'),
-              BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.restore_from_trash), label: 'Adding')
-            ],
-            onTap: (value) {
-              setState(() {
-                screenIndex = value;
-              });
-            },
+          bottomNavigationBar: Container(
+            height: 70,
+            child: BottomNavigationBar(
+              backgroundColor: Color(0xff4B9B77),
+              currentIndex: screenIndex,
+              selectedItemColor: Colors.white,
+              unselectedItemColor: Colors.white.withOpacity(.70),
+              selectedFontSize: 14,
+              unselectedFontSize: 14,
+              items: [
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.camera_alt), label: 'Trash'),
+                BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
+                BottomNavigationBarItem(
+                    icon: Icon(Icons.restore_from_trash), label: 'Adding')
+              ],
+              onTap: (value) {
+                setState(() {
+                  screenIndex = value;
+                });
+              },
+            ),
           )),
     );
   }
@@ -548,27 +594,92 @@ class _CameraExampleState extends State<CameraExample> {
     super.dispose();
   }
 
-  void _addMarker(LatLng pos) async {
-    if (_origin == null || (_origin != null && _destination != null)) {
+  void checkAddMarker(LatLng pos) async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            content: Text("해당 위치에 쓰레기통을 추가할겨?"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    addMarker(pos);
+                    Navigator.pop(context);
+                  },
+                  child: Text("네")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("아뇨? 뚱인데요?")),
+            ],
+            actionsAlignment: MainAxisAlignment.center,
+          );
+        });
+  }
+
+  void addMarker(LatLng pos) {
+    if (currentTrashType == "normal") {
       setState(() {
-        _origin = Marker(
-          markerId: const MarkerId('origin'),
-          infoWindow: const InfoWindow(title: 'Origin'),
-          icon:
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-          position: pos,
+        normaltrashcanInfo.add(
+          Marker(
+            markerId: MarkerId(normalcount.toString()),
+            icon: normalicon,
+            position: pos,
+          ),
         );
-        _destination = null;
       });
-    } else {
+      normalcount++;
+      trashcanMarkerUpdate(normaltrashcanInfo);
+    } else if (currentTrashType == "recycle") {
       setState(() {
-        _destination = Marker(
-          markerId: const MarkerId('destination'),
-          infoWindow: const InfoWindow(title: 'Destination'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          position: pos,
+        recycletrashcanInfo.add(
+          Marker(
+            markerId: MarkerId(recyclecount.toString()),
+            icon: recycleicon,
+            position: pos,
+          ),
         );
       });
+      recyclecount++;
+      trashcanMarkerUpdate(recycletrashcanInfo);
+    } else if (currentTrashType == "food") {
+      setState(() {
+        foodtrashcanInfo.add(
+          Marker(
+            markerId: MarkerId(foodcount.toString()),
+            icon: foodicon,
+            position: pos,
+          ),
+        );
+      });
+      foodcount++;
+      trashcanMarkerUpdate(foodtrashcanInfo);
+    } else if (currentTrashType == "battery") {
+      setState(() {
+        batterytrashcanInfo.add(
+          Marker(
+            markerId: MarkerId(batterycount.toString()),
+            icon: batteryicon,
+            position: pos,
+          ),
+        );
+      });
+      batterycount++;
+      trashcanMarkerUpdate(batterytrashcanInfo);
+    } else if (currentTrashType == "cloth") {
+      setState(() {
+        clothtrashcanInfo.add(
+          Marker(
+            markerId: MarkerId(clothcount.toString()),
+            icon: clothicon,
+            position: pos,
+          ),
+        );
+      });
+      clothcount++;
+      trashcanMarkerUpdate(clothtrashcanInfo);
     }
   }
 }
