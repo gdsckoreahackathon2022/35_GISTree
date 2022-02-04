@@ -77,7 +77,7 @@ class _CameraExampleState extends State<CameraExample> {
 
   Future getImage(ImageSource imageSource) async {
     final image = await picker.pickImage(source: imageSource);
-
+    
     setState(() {
       _image = File(image.path);
     });
@@ -130,10 +130,8 @@ class _CameraExampleState extends State<CameraExample> {
   Widget showmap() {
     return 
       Container(
-        color: const Color(0xffd0cece),
-        
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
+        height:  MediaQuery.of(context).size.height-100,
         child: 
         GoogleMap(
                   mapType: MapType.hybrid,
@@ -153,12 +151,7 @@ class _CameraExampleState extends State<CameraExample> {
          Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  screenIndex == 0   
-                  ? 'deeplearning'
-                  : 'map',
-                  style: TextStyle(fontSize: 25, color: const Color(0xff1ea271)),
-                ),
+               
                 SizedBox(height: 25.0),
                 screenIndex == 0   
                   ?  showImage()
@@ -187,6 +180,7 @@ class _CameraExampleState extends State<CameraExample> {
 
                       // 갤러리에서 이미지를 가져오는 버튼
                       FloatingActionButton.extended(
+                        
                         icon:  Icon(Icons.add_photo_alternate_outlined),
                         label: Text('pick Iamge'),
                         tooltip: 'pick Iamge',
@@ -204,15 +198,13 @@ class _CameraExampleState extends State<CameraExample> {
                     <Widget>[
                       // 카메라 촬영 버튼
                       FloatingActionButton(
-                            
+                        
                         child: Icon(Icons.change_circle_rounded),
                         onPressed: () async {
                         await getImage(ImageSource.gallery);
                         recycleDialog();
                       },
-                        
-                      )
-
+                      ),
                     ],
                   )
               ],
@@ -305,6 +297,7 @@ class _CameraExampleState extends State<CameraExample> {
     //바텀 네비게이션바
     bottomNavigationBar: BottomNavigationBar(
           currentIndex: screenIndex,
+          type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.camera_alt), label: 'home'),
             BottomNavigationBarItem(icon: Icon(Icons.restore_from_trash), label: 'chat'),
