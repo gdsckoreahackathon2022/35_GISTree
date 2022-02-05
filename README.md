@@ -20,7 +20,7 @@
 
 
 
-### ML, DL
+# ML, DL
 
 1. tensorflow
 - xception pretrained model by imagenet + 1 dense layers (adam by lr 0.001, categorical crossentropy, reducelronplateau mul 0.2, earlystopping)
@@ -39,7 +39,7 @@
 - 약 5~10%의 정확도 손실이 있으나 model의 용량을 줄일 수 있다.
 
 
-### Design
+# Design
 1. Figma link
  - https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
 <img width="400" alt="Group 110" src="https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png">
