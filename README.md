@@ -18,7 +18,8 @@
 - Frontend, Backend : Flutter
 - ML, DL : Tensorflow, Python
 
-
+# 다운로드
+[구글 드라이브] : https://drive.google.com/file/d/1fMD6nw4U-GEry0FqPXA4Kdgc5GRDUxJM/view?usp=sharing
 
 # ML, DL
 
