@@ -30,7 +30,7 @@
   3. https://www.kaggle.com/casually/garbage-classification (License: ?)
 - 9 classes(battery, biological, clothes, glass, metal, paper, plastic, trash, vinyl)
 - 15895 train set, 3971 validation set
-- 32 epoches, 82.1% validation accuracy
+- 35 epoches, 82.1% validation accuracy
 
 ![image](https://user-images.githubusercontent.com/88830582/152622000-3865a26e-6c19-4bf1-88b1-f5c3ddd5e019.png)
 
