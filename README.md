@@ -43,3 +43,17 @@
 1. Figma link
  - https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
 <img width="400" alt="Group 110" src="https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png">
+
+###Key changes
+Google map on app(FE)#1
+- Google project api + vers
+Marking on google map(FE) #3
+- Google_maps_flutter
+Changing TFlite to TensorFlow(BE) #7
+- Closed cause of the computer issue
+Increasing number of marker(FE) #5
+- Setting List of the marker
+Location to myplace on google map by flutter location(FE) #12
+- Flutter Location +OnLocationChanged.listen function
+Adding markers by user #16
+-Linking data + getting marker dataset     
