@@ -19,7 +19,6 @@
 - ML, DL : Tensorflow, Python
 
 <img width="400" alt="Group 110" src="https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png">
-![KakaoTalk_20220205_085253095](https://user-images.githubusercontent.com/77375383/152621441-0c5f9259-7d78-4d49-856f-97c6f91dc865.png)
 
 
 
