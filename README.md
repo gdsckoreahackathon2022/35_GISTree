@@ -1,25 +1,61 @@
 ### 35_GISTREE
  김철희, 이준명, 신동민
  
-# Trash Flash
+Trash Flash
+===========
  지구를 위해 쓰레기도 돈 내고 버려야 하는 요즘 시대! 
  
 ###  올바른 재활용을 위해 지스트리가 나섰다!
- 1. 주변에 가까운 쓰레기통의 위치와 분류
-   - **Google map**을 통해 거리가 가까운 쓰레기통의 위치를 알려주고 그후 길찾기 기능으로 바로 연결해준다.
-   - 일반, 재활용, 음식물, 베터리, 의류 쓰레기통을 각각 분류하여 자신에게 필요한 쓰레기통 위치를 쉽게 찾을수 있다.
-  
- 2. 쓰레기 **이미지 분석**을 통한 재활용 가능여부 판단 
-  - tensorflow를 활용한 딥러닝 기술을 기반으로 만들어진 이미지 분석으로 쓰레기의 종류와 재활용 가능여부 판단한다.
-  - 그후 이에 따른 쓰레기통을 바로 추천해준다.
 
-![KakaoTalk_20220205_085233248](https://user-images.githubusercontent.com/88830582/152621825-4bd203c1-3e70-4a2a-a75a-55e415099481.png)
- 
-- Frontend, Backend : Flutter
+# 문제 인식
+ - 전세계적으로 쓰레기 매립, 재활용 등 쓰레기 처리 문제로 골머리를 앓고 있음
+ - 길거리 쓰레기통이 줄어나가는 추세
+ - 이로 인해 길바닥에 돌아다니는 쓰레기가 늘어날 수 있음
+ - 쓰레기통의 위치를 찾는 앱이 필요함
+
+# 주요 기능 소개
+ ## 주변에 가까운 쓰레기통의 위치와 분류
+   1. 사용자 주변 쓰레기통 위치 **Google map** 제공
+   2. 길찾기 기능으로 경로 연결
+   3. 일반, 재활용, 음식물, 배터리, 의류에 해당하는 쓰레기통을 각각 분류하여 원하는 쓰레기통의 위치를 손쉽게 찾을 수 있다.
+   4. 화면을 길게 누르면 사용자가 직접 쓰레기통의 위치를 추가할 수 있다.
+
+<img src="https://user-images.githubusercontent.com/58902772/152628073-71b0ae87-e0f3-40cc-b9dd-7d2b2437517b.png" width="200" height="400"/> <img src="https://user-images.githubusercontent.com/58902772/152628076-90d2552b-4a17-47d5-95cc-78cc916dcf7e.png" width="200" height="400"/> <img src="https://user-images.githubusercontent.com/58902772/152628079-162126ff-f70b-44de-8bc2-c25ae9cc6807.png" width="200" height="400"/>
+
+[현재 위치 및 쓰레기통 위치][쓰레기통 분류][쓰레기통 추가]
+
+ ## 쓰레기 이미지 분석을 통한 쓰레기 분류 알고리즘
+   1. 플러터의 텐서플로우 플러그인 tflite를 사용하여 사용자로부터 받은 이미지를 분석 및 쓰레기 종류 반환
+   2. 곧 바로 해당 쓰레기에 해당하는 쓰레기통의 위치 구글맵으로 제공
+
+<img src="https://user-images.githubusercontent.com/58902772/152628164-5b24260a-a6eb-4a40-b686-7a0bca1a7a88.png" width="200" height="400"/>
+[쓰레기 분류]
+
+# 기능 추가 및 확장성
+  1. 쓰레기를 쓰레기통에 버릴 시 보상 지급  
+    - 지역 사회의 상점과 계약을 맺고, 받은 보상으로 할인 쿠폰을 구매  
+  2. 경쟁  
+    - 이달에 쓰레기통 등록자 랭킹 현황  
+  3. 기존에 공공데이터가 가진 문제점 극복  
+    - 기존 쓰레기통 공공데이터는 정확한 위치 정보를 제공하지 못함  
+    - Trash Fresh가 가진 쓰레기통의 정확한 위도, 경도 정보를 재가공하면 추가적인 효용을 만들어낼 수 있음  
+  4. 쓰레기 처리 방법 제시  
+    - 각 쓰레기에 대한 분리수거 및 처리 방법에 대해서 제공  
+    - 쓰레기 처리에 대한 인식이 부족한 나라에서 해당 앱을 사용  
+    - 재활용률 상승은 물론, 쓰레기 처리에 대한 자연스러운 시민 의식 상승 기대  
+  6. 사람들이 많이 사용하는 지도앱에 똑같은 기능을 구현할 수 있을 것이라 생각함  
+
+# 사용한 개발 도구
+- Frontend : Flutter, Android Studio, VSCODE
 - ML, DL : Tensorflow, Python
 
-# 다운로드
-[구글 드라이브] : https://drive.google.com/file/d/1fMD6nw4U-GEry0FqPXA4Kdgc5GRDUxJM/view?usp=sharing
+# 사용한 플러터 플러그인
+- <a href='https://pub.dev/packages/google_maps_flutter'>GCP 구글맵 API</a>
+- <a href='https://pub.dev/packages/location'>Location (현재 위치)</a>
+- <a href='https://pub.dev/packages/tflite'>텐서플로우 라이트</a>
+
+# APK 파일 다운로드
+[구글 드라이브] https://drive.google.com/file/d/1fMD6nw4U-GEry0FqPXA4Kdgc5GRDUxJM/view?usp=sharing
 
 # ML, DL
 
