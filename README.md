@@ -19,6 +19,7 @@
 - ML, DL : Tensorflow, Python
 
 ![Group 110](https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png)
+![캡처](https://user-images.githubusercontent.com/77375383/152615547-a9af23dc-591e-4ef5-9b7a-fe39268011d0.PNG)
 
 
 ### ML, DL
@@ -36,9 +37,6 @@
 2. Tflite
 - tensorflow model을 안드로이드에서 사용하기 위해 tflite model형식으로 변환
 - 약 5~10%의 정확도 손실이 있으나 model의 용량을 줄일 수 있다.
-
-### Frontend Backend
- - 1. 
 
 ### Design
 1. Figma link
