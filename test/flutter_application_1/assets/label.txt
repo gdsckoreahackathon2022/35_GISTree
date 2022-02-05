@@ -1,9 +1,0 @@
-0 battery
-1 biological
-2 clothes
-3 glass
-4 metal
-5 paper
-6 plastic
-7 trash
-8 vinyl
