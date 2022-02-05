@@ -12,15 +12,12 @@
  2. 쓰레기 **이미지 분석**을 통한 재활용 가능여부 판단 
   - tensorflow를 활용한 딥러닝 기술을 기반으로 만들어진 이미지 분석으로 쓰레기의 종류와 재활용 가능여부 판단한다.
   - 그후 이에 따른 쓰레기통을 바로 추천해준다.
-  
- 
-- Frontend : Flutter
-- Backend, Dev : Firebase
-- ML, DL : Tensorflow, Python
-
-<img width="400" alt="Group 110" src="https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png">
 
 ![KakaoTalk_20220205_085233248](https://user-images.githubusercontent.com/88830582/152621825-4bd203c1-3e70-4a2a-a75a-55e415099481.png)
+ 
+- Frontend, Backend : Flutter
+- ML, DL : Tensorflow, Python
+
 
 
 ### ML, DL
@@ -35,10 +32,14 @@
 - 15895 train set, 3971 validation set
 - 32 epoches, 82.1% validation accuracy
 
+![image](https://user-images.githubusercontent.com/88830582/152622000-3865a26e-6c19-4bf1-88b1-f5c3ddd5e019.png)
+
 2. Tflite
 - tensorflow model을 안드로이드에서 사용하기 위해 tflite model형식으로 변환
 - 약 5~10%의 정확도 손실이 있으나 model의 용량을 줄일 수 있다.
 
+
 ### Design
 1. Figma link
  - https://www.figma.com/file/IHAzxyMOTAWKCcmP7Oj4Cv/GDSC-%EC%93%B0%EB%A0%88%EA%B8%B0%ED%86%B5-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8?node-id=0%3A1
+<img width="400" alt="Group 110" src="https://user-images.githubusercontent.com/77375383/152611866-86f67007-413f-450c-9ad7-a95c34133191.png">
