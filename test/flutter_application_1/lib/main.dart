@@ -50,6 +50,38 @@ class _CameraExampleState extends State<CameraExample> {
   Marker _origin;
   Marker _destination;
 
+  var product=-1;
+  var carmera_id=0;
+  void changing_screen(point){
+    
+    if (point==8||point==7){
+        trashcanMarkerUpdate(normaltrashcanInfo);
+        currentTrashType = "normal";
+    }
+    if (point==3||point==4||point==5||point==6){
+            trashcanMarkerUpdate(recycletrashcanInfo);
+            currentTrashType = "recycle";   
+    }
+    if (point==1){   
+    trashcanMarkerUpdate(foodtrashcanInfo);
+                              currentTrashType = "food"; 
+    }  
+    if (point==0){   
+    trashcanMarkerUpdate(batterytrashcanInfo);
+                              currentTrashType = "battery";
+                               }  
+    if (point==2){  
+    trashcanMarkerUpdate(clothtrashcanInfo);
+                              currentTrashType = "cloth";   
+                               }  
+    screenIndex=1; 
+    carmera_id=0;
+    
+  }
+  void changing_screen2(point){
+    screenIndex=1;
+    carmera_id=0;
+  }
   @override
   void initState() {
     super.initState();
@@ -206,7 +238,7 @@ class _CameraExampleState extends State<CameraExample> {
   Widget showImage() {
     return Container(
         color: const Color(0xffd0cece),
-        margin: EdgeInsets.only(left: 95, right: 95),
+        margin: EdgeInsets.only(left: 25, right: 25),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.width,
         child: Center(
@@ -443,49 +475,113 @@ class _CameraExampleState extends State<CameraExample> {
 
   Widget first_space() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         if (screenIndex == 0) SizedBox(height: 25.0),
         screenIndex == 0 ? showImage() : showmap(),
         if (screenIndex == 0) SizedBox(height: 50.0),
         if (screenIndex == 0)
+        if(carmera_id==0)
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              SizedBox.fromSize(
+                          size: Size(10, 1)
+                        ),
               // 카메라 촬영 버튼
               FloatingActionButton.extended(
-                icon: Icon(Icons.add_a_photo),
-                label: Text('pick Iamge'),
+                
+                backgroundColor: Color(0xfff4B9B9B),
+                icon: Icon(Icons.camera,size: 15),
+                label: Text('카메라', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
                 tooltip: 'pick Iamge',
                 onPressed: () async {
+                  carmera_id=1;
                   bool checkCamera = await getImage(ImageSource.camera);
                   if (checkCamera) {
+                    
                     recycleDialog();
                   }
                 },
               ),
-
+              SizedBox.fromSize(
+                          size: Size(5, 1)
+                        ),
               // 갤러리에서 이미지를 가져오는 버튼
               FloatingActionButton.extended(
-                icon: Icon(Icons.add_photo_alternate_outlined),
-                label: Text('pick Iamge'),
+                backgroundColor: Color(0xfff4B9B9B),
+                icon: Icon(Icons.add_photo_alternate_outlined,size: 15),
+                label: Text('갤러리', style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
                 tooltip: 'pick Iamge',
                 onPressed: () async {
+                  carmera_id=1;
                   bool checkGallery = await getImage(ImageSource.gallery);
                   if (checkGallery) {
+                    
                     recycleDialog();
                   }
                 },
               ),
             ],
           )
+        else 
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                
+                FloatingActionButton.extended(
+                  
+                  backgroundColor: Color(0xfff4B9B9B),
+                  icon: Icon(Icons.map,size: 15),
+                  label: Text('지도로 돌아가기', style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.0,
+                        )),
+                  tooltip: 'pick Iamge',
+                  onPressed: () {
+                   changing_screen(product);
+                  },
+                ),
+                
+                FloatingActionButton.extended(
+                  backgroundColor: Color(0xfff4B9B9B),
+                  label: Text('쓰레기통 찾기', style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.0,
+                        )),
+                  tooltip: 'pick Iamge',
+                  onPressed: ()  {
+                    changing_screen(product);
+                  },
+                ),
+              ],
+            )
       ],
     );
   }
 
+
   recycleDialog() {
+    
+    if (_outputs[0]['label'].toString()=="0 battery") product=1;
+    if (_outputs[0]['label'].toString()=="1 biological") product=2;
+    if (_outputs[0]['label'].toString()=="2 clothes") product=3;
+    if (_outputs[0]['label'].toString()=="3 glass") product=4;
+    if (_outputs[0]['label'].toString()=="4 metal") product=5;
+    if (_outputs[0]['label'].toString()=="5 paper") product=6;
+    if (_outputs[0]['label'].toString()=="6 plastic") product=7;
+    if (_outputs[0]['label'].toString()=="7 trash") product=8;
+    if (_outputs[0]['label'].toString()=="8 vinyl") product=9; 
     _outputs != null
-        ? showDialog(
+        ?
+         showDialog(
+          
             context: context,
             barrierDismissible:
                 false, // barrierDismissible - Dialog를 제외한 다른 화면 터치 x
@@ -497,17 +593,111 @@ class _CameraExampleState extends State<CameraExample> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  
                   children: <Widget>[
+                  
+                   if (_outputs[0]['label'].toString()=="0 battery")
+                    
                     Text(
-                      _outputs[0]['label'].toString().toUpperCase(),
-                      style: TextStyle(
+                        "베터리(battery)",
+                        style: TextStyle(
                         color: Colors.black,
                         fontSize: 15.0,
                         background: Paint()..color = Colors.white,
                       ),
-                    ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="1 biological")
+                    Text(
+                        "음식물(biological)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="2 clothes")
+                    Text(
+                        "의류(clothes)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="3 glass")
+                    Text(
+                        "병류(glass)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="4 metal")
+                    Text(
+                        "캔류(metal)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="5 paper")
+                    Text(
+                        "종이류(paper)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="6 plastic")
+                    Text(
+                        "플라스틱(plastic)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else 
+                    if (_outputs[0]['label'].toString()=="7 trash")
+                    Text(
+                        "일반(trash)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else
+                    
+                    if (_outputs[0]['label'].toString()=="8 vinyl")
+                    Text(
+                        "비닐류(vinyl)",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
+                    else Text(
+                        "error",
+                        style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        background: Paint()..color = Colors.white,
+                      ),
+                    )
                   ],
                 ),
+                
                 actions: <Widget>[
                   Center(
                     child: new FlatButton(
