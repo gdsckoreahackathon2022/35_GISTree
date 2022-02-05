@@ -37,7 +37,7 @@ class CameraExample extends StatefulWidget {
 
 class _CameraExampleState extends State<CameraExample> {
   static final CameraPosition _initialCarm = CameraPosition(
-    target: LatLng(37.39348036043087, 127.11455031065394),
+    target: LatLng(37.5276, 127.0406),
     zoom: 14,
   );
   File _image;
@@ -50,44 +50,52 @@ class _CameraExampleState extends State<CameraExample> {
   Marker _origin;
   Marker _destination;
 
-  var product=-1;
-  var carmera_id=0;
-  void changing_screen(point){
-    
-    if (point==8||point==7){
-        trashcanMarkerUpdate(normaltrashcanInfo);
-        currentTrashType = "normal";
+  BitmapDescriptor myIcon;
+
+  var product = -1;
+  var carmera_id = 0;
+  void changing_screen(point) {
+    if (point == 8 || point == 7) {
+      trashcanMarkerUpdate(normaltrashcanInfo);
+      currentTrashType = "normal";
     }
-    if (point==3||point==4||point==5||point==6){
-            trashcanMarkerUpdate(recycletrashcanInfo);
-            currentTrashType = "recycle";   
+    if (point == 3 || point == 4 || point == 5 || point == 6) {
+      trashcanMarkerUpdate(recycletrashcanInfo);
+      currentTrashType = "recycle";
     }
-    if (point==1){   
-    trashcanMarkerUpdate(foodtrashcanInfo);
-                              currentTrashType = "food"; 
-    }  
-    if (point==0){   
-    trashcanMarkerUpdate(batterytrashcanInfo);
-                              currentTrashType = "battery";
-                               }  
-    if (point==2){  
-    trashcanMarkerUpdate(clothtrashcanInfo);
-                              currentTrashType = "cloth";   
-                               }  
-    screenIndex=1; 
-    carmera_id=0;
-    
+    if (point == 1) {
+      trashcanMarkerUpdate(foodtrashcanInfo);
+      currentTrashType = "food";
+    }
+    if (point == 0) {
+      trashcanMarkerUpdate(batterytrashcanInfo);
+      currentTrashType = "battery";
+    }
+    if (point == 2) {
+      trashcanMarkerUpdate(clothtrashcanInfo);
+      currentTrashType = "cloth";
+    }
+    screenIndex = 1;
+    carmera_id = 0;
   }
-  void changing_screen2(point){
-    screenIndex=1;
-    carmera_id=0;
+
+  void changing_screen2(point) {
+    screenIndex = 1;
+    carmera_id = 0;
   }
+
   @override
   void initState() {
     super.initState();
     loadModel().then((value) {
       setState(() {});
     });
+    setCustomIcon();
+  }
+
+  void setCustomIcon() async {
+    myIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 4), "assets/myicon.png");
   }
 
   // 위치 관련!!!!!!
@@ -102,8 +110,19 @@ class _CameraExampleState extends State<CameraExample> {
       _controller = ctrl;
     });
 
-    // 처음 실행할 때는 일반쓰레기통 보여줌
-    trashcanMarkerUpdate(normaltrashcanInfo);
+    if (currentTrashType == "") {
+      trashcanMarkerUpdate(normaltrashcanInfo);
+    } else if (currentTrashType == "recycle") {
+      trashcanMarkerUpdate(recycletrashcanInfo);
+    } else if (currentTrashType == "food") {
+      trashcanMarkerUpdate(foodtrashcanInfo);
+    } else if (currentTrashType == "battery") {
+      trashcanMarkerUpdate(batterytrashcanInfo);
+    } else if (currentTrashType == "cloth") {
+      trashcanMarkerUpdate(clothtrashcanInfo);
+    } else {
+      trashcanMarkerUpdate(normaltrashcanInfo);
+    }
 
     // 실시간 위치 추적 및 위치 정보 업데이트
     location.onLocationChanged.listen((userlocation) {
@@ -173,7 +192,7 @@ class _CameraExampleState extends State<CameraExample> {
         onTap: () {},
         position: LatLng(mylocation.currentlocation.latitude,
             mylocation.currentlocation.longitude),
-        icon: BitmapDescriptor.defaultMarkerWithHue(180),
+        icon: myIcon,
       );
     });
     sumMarker();
@@ -277,10 +296,14 @@ class _CameraExampleState extends State<CameraExample> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Text(" Trash Fresh 이용 방법 및 주의사항",
+                            Text("Trash Fresh ",
                                 style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black)), // <-- Text
+                                    fontSize: 14, color: Colors.black)),
+                            Text(
+                              ' beta',
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.black),
+                            ) // <-- Text
                           ],
                         ),
                       ),
@@ -481,82 +504,76 @@ class _CameraExampleState extends State<CameraExample> {
         screenIndex == 0 ? showImage() : showmap(),
         if (screenIndex == 0) SizedBox(height: 50.0),
         if (screenIndex == 0)
-        if(carmera_id==0)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox.fromSize(
-                          size: Size(10, 1)
-                        ),
-              // 카메라 촬영 버튼
-              FloatingActionButton.extended(
-                
-                backgroundColor: Color(0xfff4B9B9B),
-                icon: Icon(Icons.camera,size: 15),
-                label: Text('카메라', style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.0,
-                      )),
-                tooltip: 'pick Iamge',
-                onPressed: () async {
-                  carmera_id=1;
-                  bool checkCamera = await getImage(ImageSource.camera);
-                  if (checkCamera) {
-                    
-                    recycleDialog();
-                  }
-                },
-              ),
-              SizedBox.fromSize(
-                          size: Size(5, 1)
-                        ),
-              // 갤러리에서 이미지를 가져오는 버튼
-              FloatingActionButton.extended(
-                backgroundColor: Color(0xfff4B9B9B),
-                icon: Icon(Icons.add_photo_alternate_outlined,size: 15),
-                label: Text('갤러리', style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.0,
-                      )),
-                tooltip: 'pick Iamge',
-                onPressed: () async {
-                  carmera_id=1;
-                  bool checkGallery = await getImage(ImageSource.gallery);
-                  if (checkGallery) {
-                    
-                    recycleDialog();
-                  }
-                },
-              ),
-            ],
-          )
-        else 
-          Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          if (carmera_id == 0)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                
+                SizedBox.fromSize(size: Size(10, 1)),
+                // 카메라 촬영 버튼
                 FloatingActionButton.extended(
-                  
                   backgroundColor: Color(0xfff4B9B9B),
-                  icon: Icon(Icons.map,size: 15),
-                  label: Text('지도로 돌아가기', style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                        )),
+                  icon: Icon(Icons.camera, size: 15),
+                  label: Text('카메라',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
                   tooltip: 'pick Iamge',
-                  onPressed: () {
-                   changing_screen(product);
+                  onPressed: () async {
+                    carmera_id = 1;
+                    bool checkCamera = await getImage(ImageSource.camera);
+                    if (checkCamera) {
+                      recycleDialog();
+                    }
                   },
                 ),
-                
+                SizedBox.fromSize(size: Size(5, 1)),
+                // 갤러리에서 이미지를 가져오는 버튼
                 FloatingActionButton.extended(
                   backgroundColor: Color(0xfff4B9B9B),
-                  label: Text('쓰레기통 찾기', style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.0,
-                        )),
+                  icon: Icon(Icons.add_photo_alternate_outlined, size: 15),
+                  label: Text('갤러리',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
                   tooltip: 'pick Iamge',
-                  onPressed: ()  {
+                  onPressed: () async {
+                    carmera_id = 1;
+                    bool checkGallery = await getImage(ImageSource.gallery);
+                    if (checkGallery) {
+                      recycleDialog();
+                    }
+                  },
+                ),
+              ],
+            )
+          else
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                FloatingActionButton.extended(
+                  backgroundColor: Color(0xfff4B9B9B),
+                  icon: Icon(Icons.map, size: 15),
+                  label: Text('지도로 돌아가기',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
+                  tooltip: 'pick Iamge',
+                  onPressed: () {
+                    changing_screen(product);
+                  },
+                ),
+                FloatingActionButton.extended(
+                  backgroundColor: Color(0xfff4B9B9B),
+                  label: Text('쓰레기통 찾기',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.0,
+                      )),
+                  tooltip: 'pick Iamge',
+                  onPressed: () {
                     changing_screen(product);
                   },
                 ),
@@ -566,22 +583,18 @@ class _CameraExampleState extends State<CameraExample> {
     );
   }
 
-
   recycleDialog() {
-    
-    if (_outputs[0]['label'].toString()=="0 battery") product=1;
-    if (_outputs[0]['label'].toString()=="1 biological") product=2;
-    if (_outputs[0]['label'].toString()=="2 clothes") product=3;
-    if (_outputs[0]['label'].toString()=="3 glass") product=4;
-    if (_outputs[0]['label'].toString()=="4 metal") product=5;
-    if (_outputs[0]['label'].toString()=="5 paper") product=6;
-    if (_outputs[0]['label'].toString()=="6 plastic") product=7;
-    if (_outputs[0]['label'].toString()=="7 trash") product=8;
-    if (_outputs[0]['label'].toString()=="8 vinyl") product=9; 
+    if (_outputs[0]['label'].toString() == "0 battery") product = 1;
+    if (_outputs[0]['label'].toString() == "1 biological") product = 2;
+    if (_outputs[0]['label'].toString() == "2 clothes") product = 3;
+    if (_outputs[0]['label'].toString() == "3 glass") product = 4;
+    if (_outputs[0]['label'].toString() == "4 metal") product = 5;
+    if (_outputs[0]['label'].toString() == "5 paper") product = 6;
+    if (_outputs[0]['label'].toString() == "6 plastic") product = 7;
+    if (_outputs[0]['label'].toString() == "7 trash") product = 8;
+    if (_outputs[0]['label'].toString() == "8 vinyl") product = 9;
     _outputs != null
-        ?
-         showDialog(
-          
+        ? showDialog(
             context: context,
             barrierDismissible:
                 false, // barrierDismissible - Dialog를 제외한 다른 화면 터치 x
@@ -593,111 +606,100 @@ class _CameraExampleState extends State<CameraExample> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  
                   children: <Widget>[
-                  
-                   if (_outputs[0]['label'].toString()=="0 battery")
-                    
-                    Text(
+                    if (_outputs[0]['label'].toString() == "0 battery")
+                      Text(
                         "베터리(battery)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="1 biological")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "1 biological")
+                      Text(
                         "음식물(biological)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="2 clothes")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "2 clothes")
+                      Text(
                         "의류(clothes)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="3 glass")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "3 glass")
+                      Text(
                         "병류(glass)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="4 metal")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "4 metal")
+                      Text(
                         "캔류(metal)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="5 paper")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "5 paper")
+                      Text(
                         "종이류(paper)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="6 plastic")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "6 plastic")
+                      Text(
                         "플라스틱(plastic)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else 
-                    if (_outputs[0]['label'].toString()=="7 trash")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "7 trash")
+                      Text(
                         "일반(trash)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else
-                    
-                    if (_outputs[0]['label'].toString()=="8 vinyl")
-                    Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else if (_outputs[0]['label'].toString() == "8 vinyl")
+                      Text(
                         "비닐류(vinyl)",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
-                    else Text(
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
+                    else
+                      Text(
                         "error",
                         style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        background: Paint()..color = Colors.white,
-                      ),
-                    )
+                          color: Colors.black,
+                          fontSize: 15.0,
+                          background: Paint()..color = Colors.white,
+                        ),
+                      )
                   ],
                 ),
-                
+
                 actions: <Widget>[
                   Center(
                     child: new FlatButton(
@@ -766,7 +768,7 @@ class _CameraExampleState extends State<CameraExample> {
                     icon: Icon(Icons.camera_alt), label: 'Trash'),
                 BottomNavigationBarItem(icon: Icon(Icons.map), label: 'Map'),
                 BottomNavigationBarItem(
-                    icon: Icon(Icons.restore_from_trash), label: 'Adding')
+                    icon: Icon(Icons.book), label: 'My Page')
               ],
               onTap: (value) {
                 setState(() {
